@@ -1,0 +1,41 @@
+version: '2'
+services:
+    db:
+        image: mysql
+        command: ["--default-authentication-plugin=mysql_native_password"]
+        ports:
+            - "3307:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: symfony
+            MYSQL_USER: symfony
+            MYSQL_PASSWORD: symfony
+        networks:
+          sf_network:
+    php:
+        build: php-fpm
+        ports:
+            - "9000:9000"
+        volumes:
+            - ../symfony:/var/www/symfony:cached
+        links:
+            - db
+        extra_hosts:
+            - "docker.host:127.0.0.1"
+    nginx:
+        build: nginx
+        ports:
+            - "8080:80"
+        links:
+            - php
+        volumes_from:
+            - php
+        volumes:
+            - ./logs/nginx/:/var/log/nginx:cached
+networks:
+  sf_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+          - subnet: 172.8.8.0/24
