@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Table(name="`user`")
+ * @ORM\Table(name="users")
  * @ORM\Entity
  */
 class User implements UserInterface
@@ -17,14 +17,17 @@ class User implements UserInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
     /**
      * @ORM\Column(type="string", length=25, unique=true)
      */
     private $username;
+
     /**
      * @ORM\Column(type="string", length=500)
      */
     private $password;
+
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
