@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -25,6 +26,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=500)
+     * @Serializer\Exclude()
      */
     private $password;
 
