@@ -1,35 +1,19 @@
-.PHONY: install update start stop restart
+.PHONY: install update start stop restart gen-jwt-keys
 
 MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR := $(dir $(MKFILE_PATH))
-
-APP_PATH=$(MKFILE_DIR)app
-DOTENV_FILE_PATH=$(APP_PATH)/.env
-JWT_KEYS_PATH=$(APP_PATH)/config/jwt
-
-#echo $(DOTENV_FILE_PATH)
-#export $(cat ./app/.env | grep -v ^# | xargs)
-#echo ${JWT_PASSPHRASE}
-#sudo -s && source $(DOTENV_FILE_PATH) && echo "my secret key is: " $$JWT_PASSPHRASE
-
-test:
-	@cd $(APP_PATH) \
-	@chmod +x $(DOTENV_FILE_PATH).env; \
-	read -r -p "Enter jwt passphrase: " secret; \
-	echo "$$secret"; \
-    sed -i "s/JWT_PASSPHRASE=.*/JWT_PASSPHRASE=$$secret/g" $(DOTENV_FILE_PATH)
+DOCKER_PATH := $(MKFILE_DIR)docker
+APP_PATH := $(MKFILE_DIR)app
+DOTENV_FILE_PATH := $(APP_PATH)/.env
+JWT_KEYS_PATH := $(APP_PATH)/config/jwt
 
 install:
-	cd docker; \
+	@cd $(DOCKER_PATH); \
 	docker build; \
-	cd app; \
+	cd ../ && cd $(APP_PATH); \
 	composer install; \
-	cp ./.env.dist ./.env; \
-	chmod +x .env; \
-	@read -p "Enter jwt passphrase:" JWT_PASSPHRASE; \
-    sed -i 's/JWT_PASSPHRASE=*/JWT_PASSPHRASE=$$JWT_PASSPHRASE/g' .env
-
-	#source $(APP_PATH)/.env && echo "my secret key is: $$JWT_PASSPHRASE"
+	cp ./.env.dist ./.env;
+	make gen-jwt-keys --no-print-directory
 
 update:
 	cd app && composer update
@@ -44,24 +28,10 @@ restart:
 	make stop
 	make start
 
+# TODO: verify if user input for USER_JWT_PASSPHRASE is greater than 4 and less than 1023 characters
 gen-jwt-keys:
-	cd app; \
-	@while [ -z "$$SECRET" ]; do \
-        read -r -p `openssl genrsa -out config/jwt/private.pem -aes256 4096` SECRET; \
-    done ; \
-    echo massa "$$SECRET"
-
-
-
-#	@echo 'teste: '
-#	@read -r -p "Enter jwt passphrase: " test; \
-#	echo massa "$$test"
-#
-#	cd app; \
-#    read -r -p `openssl genrsa -out config/jwt/private.pem -aes256 4096` secret secretconfirm; \
-#    echo $secret; \
-#    echo $secretconfirm;
-
-#	@read -p "Enter Module Name:" module; \
-#    module_dir=./modules/$$module; \
-#    mkdir -p $$module_dir/build
+	@cd $(APP_PATH); \
+	read -r -p "Enter jwt passphrase: " USER_JWT_PASSPHRASE; \
+	openssl genrsa -passout pass:$$USER_JWT_PASSPHRASE -out config/jwt/private.pem -aes256 4096; \
+	chmod +x $(DOTENV_FILE_PATH); \
+	sed -i "s/JWT_PASSPHRASE=.*/JWT_PASSPHRASE=$$USER_JWT_PASSPHRASE/g" $(DOTENV_FILE_PATH);
