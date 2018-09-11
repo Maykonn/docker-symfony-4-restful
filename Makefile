@@ -8,21 +8,26 @@ DOTENV_FILE_PATH := $(APP_PATH)/.env
 JWT_KEYS_PATH := $(APP_PATH)/config/jwt
 
 install:
+	@echo Building...
 	@cd $(DOCKER_PATH); \
-	docker build; \
+	docker-compose build; \
 	cd ../ && cd $(APP_PATH); \
 	composer install; \
 	cp ./.env.dist ./.env;
-	make gen-jwt-keys --no-print-directory
+	@make gen-jwt-keys --no-print-directory
+	@echo Installation successful
 
 update:
-	cd app && composer update
+	cd $(APP_PATH); \
+	composer update
 
 start:
-	cd docker && docker-compose up
+	cd $(DOCKER_PATH); \
+	docker-compose up -d
 
 stop:
-	cd docker && docker-compose down
+	cd $(DOCKER_PATH); \
+	docker-compose down
 
 restart:
 	make stop
@@ -30,8 +35,7 @@ restart:
 
 # TODO: verify if user input for USER_JWT_PASSPHRASE is greater than 4 and less than 1023 characters
 gen-jwt-keys:
-	@cd $(APP_PATH); \
-	read -r -p "Enter jwt passphrase: " USER_JWT_PASSPHRASE; \
+	@read -r -p "Set up a JWT passphrase: " USER_JWT_PASSPHRASE; \
 	openssl genrsa -passout pass:$$USER_JWT_PASSPHRASE -out $(JWT_KEYS_PATH)/private.pem -aes256 4096; \
 	openssl rsa -in $(JWT_KEYS_PATH)/private.pem -passin pass:$$USER_JWT_PASSPHRASE -pubout -out $(JWT_KEYS_PATH)/public.pub; \
 	chmod +x $(DOTENV_FILE_PATH); \
