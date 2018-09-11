@@ -32,6 +32,7 @@ restart:
 gen-jwt-keys:
 	@cd $(APP_PATH); \
 	read -r -p "Enter jwt passphrase: " USER_JWT_PASSPHRASE; \
-	openssl genrsa -passout pass:$$USER_JWT_PASSPHRASE -out config/jwt/private.pem -aes256 4096; \
+	openssl genrsa -passout pass:$$USER_JWT_PASSPHRASE -out $(JWT_KEYS_PATH)/private.pem -aes256 4096; \
+	openssl rsa -in $(JWT_KEYS_PATH)/private.pem -passin pass:$$USER_JWT_PASSPHRASE -pubout -out $(JWT_KEYS_PATH)/public.pub; \
 	chmod +x $(DOTENV_FILE_PATH); \
 	sed -i "s/JWT_PASSPHRASE=.*/JWT_PASSPHRASE=$$USER_JWT_PASSPHRASE/g" $(DOTENV_FILE_PATH);
