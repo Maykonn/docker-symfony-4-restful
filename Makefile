@@ -10,6 +10,7 @@ JWT_KEYS_PATH := $(APP_PATH)/config/jwt
 install:
 	@echo Building...
 	@cd $(DOCKER_PATH); \
+	cp ./docker-compose.example.yml ./docker-compose.yml; \
 	docker-compose build; \
 	cd ../ && cd $(APP_PATH); \
 	composer install; \

@@ -43,5 +43,5 @@ services:
     ports: 
       - "9000:9000"
     volumes: 
-      - "../symfony:/var/www/symfony:cached"
+      - "../app:/var/www/app:cached"
 version: "2"
