@@ -19,7 +19,7 @@ secret, you can type what you prefer):
 make install
 ```
 
-4) Create the database and database structure executing:
+4) Create the database and database structure:
 ```
 make database
 make database-structure
