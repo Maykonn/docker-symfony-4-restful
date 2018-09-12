@@ -3,18 +3,32 @@ This project is all you need to start simply and fastly your new RESTful APIs us
 and Makefile to create an easily maintenance cycle for your REST API.
 
 ## Installing and starting your RESTful API
-1) Just clone this repository with:  
-`git clone https://github.com/Maykonn/docker-symfony-4-restful.git`
+1) Just clone this repository with:
+```
+git clone https://github.com/Maykonn/docker-symfony-4-restful.git
+```
 
-2) Go to your hosts file and add app.localhost:  
-`127.0.0.1   app.localhost`
+2) Go to your hosts file and add app.localhost:
+```
+127.0.0.1   app.localhost
+```
 
 3) Execute the following command to install the build the Docker image (you will be asked by a JWT 
-secret, you can type what you prefer):    
-`make install`
+secret, you can type what you prefer):
+```
+make install
+```
 
-4) Start your API with:  
-`make start`
+4) Creating the database and database structure:
+```
+make database 
+make database-structure
+```
+
+5) Start your API with:
+```
+make start
+```
 
 ## Using the initial provided API
 The initial api code provided by this bundle is an authentication api for Symfony 4 using a JWT approach, bellow are listed
