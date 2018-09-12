@@ -1,4 +1,4 @@
-.PHONY: install update start stop restart gen-jwt-keys
+.PHONY: install update start stop restart database database-structure jwt-keys
 
 MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MKFILE_DIR := $(dir $(MKFILE_PATH))
@@ -15,7 +15,7 @@ install:
 	cd ../ && cd $(APP_PATH); \
 	composer install; \
 	cp ./.env.dist ./.env;
-	@make gen-jwt-keys --no-print-directory
+	@make jwt-keys --no-print-directory
 	@echo Installation successful
 
 update:
@@ -29,7 +29,7 @@ update:
 start:
 	@echo Starting...
 	@cd $(DOCKER_PATH); \
-	docker-compose up -d
+	docker-compose up --build -d
 	@echo Done.
 
 stop:
@@ -43,8 +43,18 @@ restart:
 	@make stop --no-print-directory
 	@make start --no-print-directory
 
+# TODO: permit to be executed only in prod environment
+database:
+	@cd $(DOCKER_PATH); \
+	docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:database:create
+
+# TODO: permit to be executed only in prod environment
+database-structure:
+	@cd $(DOCKER_PATH); \
+	docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:schema:create
+
 # TODO: verify if user input for USER_JWT_PASSPHRASE is greater than 4 and less than 1023 characters
-gen-jwt-keys:
+jwt-keys:
 	@read -r -p "Set up a JWT passphrase: " USER_JWT_PASSPHRASE; \
 	openssl genrsa -passout pass:$$USER_JWT_PASSPHRASE -out $(JWT_KEYS_PATH)/private.pem -aes256 4096; \
 	openssl rsa -in $(JWT_KEYS_PATH)/private.pem -passin pass:$$USER_JWT_PASSPHRASE -pubout -out $(JWT_KEYS_PATH)/public.pem; \

@@ -14,7 +14,8 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_USER: symfony
     image: mysql
-    networks: 
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    networks:
       sf_network: ~
     ports: 
       - "3307:3306"
