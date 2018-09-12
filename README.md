@@ -31,8 +31,8 @@ make start
 ```
 
 ## Using the initial provided API
-The initial api code provided by this bundle is an authentication API for Symfony 4 using a JWT approach, below are listed
-all initial routes provided:  
+The initial RESTful API code provided by this bundle is an example of a JWT Authentication approach with Symfony 4, 
+below are listed all initial routes provided:  
 
 `POST > http://app.localhost:8080/register` (json body example):  
 ```JSON
