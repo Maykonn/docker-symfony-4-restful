@@ -55,11 +55,11 @@ below are listed all initial routes provided:
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1heWtvbm4iLCJpYXQiOjE1MTYyMzkwMjJ9.b7rMHdFlAixTQA6DzLoHIjw3MrRtkbm3tuUr_zgXhmE
 ```
 
-## What to do next?
+## What to do next
 A pretty basic API is provided by this project and now you can start creating your own resources to your API with new
 controllers, models, repositories, services, whatever you need.
 
-## About make commands:
+## About make commands
 The Makefile is here to keep the management of your API as simple as possible avoiding confuse commands. 
 
 - `make install`: to install and build the project
@@ -71,4 +71,16 @@ The Makefile is here to keep the management of your API as simple as possible av
 - `make database-structure`: to create the database structure (tables, etc.)
 - `make jwt-keys`: to create the public and private keys to protect your routes with JWT, the `make install` uses this command
 
-Read more about `make` here: https://www.gnu.org/software/make/ 
+Read more about `make` here: https://www.gnu.org/software/make/
+
+# Community Support
+If you need help with this bundle please consider (opening a question on StackOverflow)[https://stackoverflow.com/questions/ask] 
+using the `docker-symfony-4-restful` tag, it is the official support platform for this bundle.
+
+Github Issues are dedicated to bug reports and feature requests.
+
+# Contributing
+You can contribute to this project cloning this repository in your clone you just need to create a new branch using a 
+name related to the new functionality which you'll create.  
+When you finish your work, you just need to create a pull request which will be revised, merged to master branch (if the code 
+doesn't break the project) and published as a new release.
