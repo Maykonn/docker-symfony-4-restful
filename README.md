@@ -74,7 +74,7 @@ The Makefile is here to keep the management of your API as simple as possible av
 Read more about `make` here: https://www.gnu.org/software/make/
 
 # Community Support
-If you need help with this bundle please consider [opening a question on StackOverflow](https://stackoverflow.com/questions/ask)
+If you need help with this bundle please consider [open a question on StackOverflow](https://stackoverflow.com/questions/ask)
 using the `docker-symfony-4-restful` tag, it is the official support platform for this bundle.
 
 Github Issues are dedicated to bug reports and feature requests.
