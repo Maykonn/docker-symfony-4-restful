@@ -6,6 +6,8 @@ DOCKER_PATH := $(MKFILE_DIR)docker
 APP_PATH := $(MKFILE_DIR)app
 DOTENV_FILE_PATH := $(APP_PATH)/.env
 JWT_KEYS_PATH := $(APP_PATH)/config/jwt
+JWT_SECRET_MIN_LENGTH := 4
+JWT_SECRET_MAX_LENGTH := 1023
 
 define get_env
 	$$(grep APP_ENV $(DOTENV_FILE_PATH) | cut -d '=' -f2)
@@ -47,15 +49,16 @@ restart:
 	@make stop --no-print-directory
 	@make start --no-print-directory
 
-# TODO: verify if user input for USER_JWT_PASSPHRASE is greater than 4 and less than 1023 characters
 jwt-keys:
 	@read -r -p "Set up a JWT passphrase: " USER_JWT_PASSPHRASE; \
-	openssl genrsa -passout pass:$$USER_JWT_PASSPHRASE -out $(JWT_KEYS_PATH)/private.pem -aes256 4096; \
-	openssl rsa -in $(JWT_KEYS_PATH)/private.pem -passin pass:$$USER_JWT_PASSPHRASE -pubout -out $(JWT_KEYS_PATH)/public.pem; \
-	chmod 755 $(JWT_KEYS_PATH)/private.pem; \
-	chmod 755 $(JWT_KEYS_PATH)/public.pem; \
-	chmod +x $(DOTENV_FILE_PATH); \
-	sed -i "s/JWT_PASSPHRASE=.*/JWT_PASSPHRASE=$$USER_JWT_PASSPHRASE/g" $(DOTENV_FILE_PATH);
+	if [ $${#USER_JWT_PASSPHRASE} -ge $(JWT_SECRET_MIN_LENGTH) ] && [ $${#USER_JWT_PASSPHRASE} -le $(JWT_SECRET_MAX_LENGTH) ]; then \
+		openssl genrsa -passout pass:$$USER_JWT_PASSPHRASE -out $(JWT_KEYS_PATH)/private.pem -aes256 4096; \
+		openssl rsa -in $(JWT_KEYS_PATH)/private.pem -passin pass:$$USER_JWT_PASSPHRASE -pubout -out $(JWT_KEYS_PATH)/public.pem; \
+		chmod 755 $(JWT_KEYS_PATH)/private.pem; \
+		chmod 755 $(JWT_KEYS_PATH)/public.pem; \
+		chmod +x $(DOTENV_FILE_PATH); \
+		sed -i "s/JWT_PASSPHRASE=.*/JWT_PASSPHRASE=$$USER_JWT_PASSPHRASE/g" $(DOTENV_FILE_PATH);
+	fi
 
 database:
 ifeq ($(force),1)
