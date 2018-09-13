@@ -67,11 +67,18 @@ The Makefile is here to keep the management of your API as simple as possible av
 - `make start`: to start the API
 - `make stop`: to stop the API
 - `make restart`: to stop and then start again the API
+- `make jwt-keys`: to create the public and private keys to protect your routes with JWT, the `make install` uses this command
 - `make database`: to create the database
 - `make database-structure`: to create the database structure (tables, etc.)
-- `make jwt-keys`: to create the public and private keys to protect your routes with JWT, the `make install` uses this command
+- `make database-structure-update`: to update the database structure
 
 Read more about `make` here: https://www.gnu.org/software/make/
+
+**OBS:** `make database*` commands will be executed only when in **"dev"** environment.  
+If are you aware about the risks use the `force=1` param, example:
+```
+make database-structure-update force=1
+```
 
 # Community Support
 If you need help with this bundle please consider [open a question on StackOverflow](https://stackoverflow.com/questions/ask)
