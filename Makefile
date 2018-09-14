@@ -61,37 +61,37 @@ jwt-keys:
 	fi
 
 database:
-ifeq ($(force),1)
-	@cd $(DOCKER_PATH); \
-	docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:database:create
-else ifeq ($(shell [ $(call get_env) = dev ] && echo true),true)
-	@cd $(DOCKER_PATH); \
-	docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:database:create
-else
-	@echo Recipe enabled only for \"dev\" environment, see $(DOTENV_FILE_PATH) file.
-	@echo If are you aware about the risks run as \`make database force=1\`.
-endif
+	@if \
+		( [ $(force) ] && [ $(force) -eq 1 ] ) || \
+		( [ $(call get_env) = dev ] ); \
+	then \
+		cd $(DOCKER_PATH); \
+		docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:database:create; \
+	else \
+		echo Recipe enabled only for \"dev\" environment, see $(DOTENV_FILE_PATH) file.; \
+		echo If are you aware about the risks run as \`make database force=1\`.; \
+	fi
 
 database-structure:
-ifeq ($(force),1)
-	@cd $(DOCKER_PATH); \
-	docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:schema:create
-else ifeq ($(shell [ $(call get_env) = dev ] && echo true),true)
-	@cd $(DOCKER_PATH); \
-	docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:schema:create
-else
-	@echo Recipe enabled only for \"dev\" environment, see $(DOTENV_FILE_PATH) file.
-	@echo If are you aware about the risks run as \`make database-structure force=1\`.
-endif
+	@if \
+		( [ $(force) ] && [ $(force) -eq 1 ] ) || \
+		( [ $(call get_env) = dev ] ); \
+	then \
+		cd $(DOCKER_PATH); \
+		docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:schema:create; \
+	else \
+		echo Recipe enabled only for \"dev\" environment, see $(DOTENV_FILE_PATH) file.; \
+		echo If are you aware about the risks run as \`make database-structure force=1\`.; \
+	fi
 
 database-structure-update:
-ifeq ($(force),1)
-	@cd $(DOCKER_PATH); \
-	docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:schema:update
-else ifeq ($(shell [ $(call get_env) = dev ] && echo true),true)
-	@cd $(DOCKER_PATH); \
-	docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:schema:update
-else
-	@echo Recipe enabled only for \"dev\" environment, see $(DOTENV_FILE_PATH) file.
-	@echo If are you aware about the risks run as \`make database-structure force=1\`.
-endif
+	@if \
+		( [ $(force) ] && [ $(force) -eq 1 ] ) || \
+		( [ $(call get_env) = dev ] ); \
+	then \
+		cd $(DOCKER_PATH); \
+		docker exec -it "$$(docker-compose ps | grep "php" | awk '{print $$1}')" bin/console doctrine:schema:update; \
+	else \
+		echo Recipe enabled only for \"dev\" environment, see $(DOTENV_FILE_PATH) file.; \
+		echo If are you aware about the risks run as \`make database-structure-update force=1\`.; \
+	fi
