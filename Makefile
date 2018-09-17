@@ -51,13 +51,18 @@ restart:
 
 jwt-keys:
 	@read -r -p "Set up a JWT passphrase: " USER_JWT_PASSPHRASE; \
-	if [ $${#USER_JWT_PASSPHRASE} -ge $(JWT_SECRET_MIN_LENGTH) ] && [ $${#USER_JWT_PASSPHRASE} -le $(JWT_SECRET_MAX_LENGTH) ]; then \
+	if \
+		( [ $${#USER_JWT_PASSPHRASE} -ge $(JWT_SECRET_MIN_LENGTH) ] ) && \
+		( [ $${#USER_JWT_PASSPHRASE} -le $(JWT_SECRET_MAX_LENGTH) ] ); \
+	then \
 		openssl genrsa -passout pass:$$USER_JWT_PASSPHRASE -out $(JWT_KEYS_PATH)/private.pem -aes256 4096; \
 		openssl rsa -in $(JWT_KEYS_PATH)/private.pem -passin pass:$$USER_JWT_PASSPHRASE -pubout -out $(JWT_KEYS_PATH)/public.pem; \
 		chmod 755 $(JWT_KEYS_PATH)/private.pem; \
 		chmod 755 $(JWT_KEYS_PATH)/public.pem; \
 		chmod +x $(DOTENV_FILE_PATH); \
-		sed -i "s/JWT_PASSPHRASE=.*/JWT_PASSPHRASE=$$USER_JWT_PASSPHRASE/g" $(DOTENV_FILE_PATH);
+		sed -i "s/JWT_PASSPHRASE=.*/JWT_PASSPHRASE=$$USER_JWT_PASSPHRASE/g" $(DOTENV_FILE_PATH); \
+	else \
+		echo JWT passphrase rule: length required between $(JWT_SECRET_MIN_LENGTH) and $(JWT_SECRET_MAX_LENGTH); \
 	fi
 
 database:
