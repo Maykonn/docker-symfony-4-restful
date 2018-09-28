@@ -1,4 +1,4 @@
-# Docker-Symfony-4-RESTful
+# Docker Symfony 4 RESTful
 This project is all you need to start simply and fastly your new RESTful APIs using Symfony 4. This stack uses Docker
 and Makefile to create an easy maintenance cycle for your REST API.
 
