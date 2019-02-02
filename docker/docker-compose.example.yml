@@ -45,4 +45,12 @@ services:
       - "9000:9000"
     volumes: 
       - "../app:/var/www/app:cached"
+phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+        - "99:80"
+    networks: 
+      sf_network: ~
+    links:
+        - db 
 version: "2"
